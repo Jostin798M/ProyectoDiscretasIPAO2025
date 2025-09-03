@@ -1,31 +1,28 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+from tkinter import messagebox
 import pandas as pd
 from modelo import ModeloPredictor
 from interfaz import InterfazPredictor
 
-def main():
-    # Crear ventana principal
-    root = tk.Tk()
-    root.title("Predictor de Enfermedad Cardíaca")
-    root.geometry("800x900")
-    root.resizable(True, True)
-    
-    try:
-        # Cargar datos y crear modelo
-        df = pd.read_csv('heart.csv')
-        modelo = ModeloPredictor(df)
-        
-        # Crear interfaz
-        app = InterfazPredictor(root, modelo)
-        
-        # Iniciar aplicación
-        root.mainloop()
-        
-    except FileNotFoundError:
-        messagebox.showerror("Error", "No se encontró el archivo 'heart.csv'. Asegúrate de que esté en la misma carpeta.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al inicializar la aplicación: {str(e)}")
+# Creacion de la ventana principal de la interfaz
+ventana = tk.Tk()
+ventana.title("Predictor de Enfermedad Cardíaca")
+ventana.geometry("800x900")
+ventana.resizable(False, False)
 
-if __name__ == "__main__":
-    main()
+try:
+    # Cargar datos y crear modelo de arbol de decicion
+    df = pd.read_csv('test/heart.csv')
+    modelo = ModeloPredictor(df)
+    
+    # Crear interfaz principal
+    app = InterfazPredictor(ventana, modelo)
+    
+    # Iniciar aplicación
+    ventana.mainloop()
+    
+    # Manejo de excepciones en caso de la existencia de algun error
+except FileNotFoundError:
+    messagebox.showerror("Error", "No se encontró el archivo 'heart.csv'.")
+except Exception as e:
+    messagebox.showerror("Error", f"Error al inicializar la aplicación: {str(e)}")
