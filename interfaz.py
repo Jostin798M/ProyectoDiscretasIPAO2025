@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox, filedialog
 import os
 
 class InterfazPredictor:
+    '''Inicializa la interfaz gráfica del predictor de enfermedades cardíacas'''
     def __init__(self, root, modelo):
         self.root = root
         self.modelo = modelo
@@ -13,6 +14,7 @@ class InterfazPredictor:
         
         self.configurar_interfaz()
     
+    '''Configura y organiza todos los componentes principales de la interfaz gráfica'''
     def configurar_interfaz(self):
         # Frame principal con scroll
         main_frame = ttk.Frame(self.root)
@@ -63,6 +65,7 @@ class InterfazPredictor:
             canvas.yview_scroll(int(-1*(event.delta/120)), "units")
         canvas.bind_all("<MouseWheel>", _on_mousewheel)
     
+    '''Crea los campos de entrada de datos del paciente organizados en columnas'''
     def crear_campos_entrada(self, parent):
         # Descripciones y valores por defecto
         campos_info = {
@@ -104,6 +107,7 @@ class InterfazPredictor:
                 col = 0
                 row += 1
     
+    '''Crea los botones de acción de la interfaz (predecir, limpiar, guardar imagen)'''
     def crear_botones(self, parent):
         # Botón generar predicción
         btn_predecir = ttk.Button(parent, text="Generar Predicción", 
@@ -120,6 +124,7 @@ class InterfazPredictor:
                                 command=self.guardar_imagen_arbol)
         btn_guardar.pack(side=tk.LEFT)
     
+    '''Crea la sección para mostrar resultados de predicción y camino de decisión'''
     def crear_seccion_resultados(self, parent):
         # Label para resultado de predicción
         self.resultado_label = ttk.Label(parent, text="Predicción: No realizada", 
@@ -150,6 +155,7 @@ class InterfazPredictor:
         self.camino_text.pack(side="left", fill="both", expand=True)
         text_scrollbar.pack(side="right", fill="y")
     
+    '''Obtiene y muestra las características del árbol de decisión (profundidad, nodos, etc.)'''
     def mostrar_caracteristicas_arbol(self):
         caracteristicas = self.modelo.obtener_caracteristicas_arbol()
         texto = f"""Características del Árbol:
@@ -160,6 +166,7 @@ Nodos terminales: {caracteristicas['nodos_terminales']}"""
         
         self.caracteristicas_label.config(text=texto)
     
+    '''Extrae y valida los datos ingresados en el formulario por el usuario'''
     def obtener_datos_formulario(self):
         datos = {}
         try:
@@ -180,6 +187,7 @@ Nodos terminales: {caracteristicas['nodos_terminales']}"""
             messagebox.showerror("Error", "Todos los campos deben contener números válidos")
             return None
     
+    '''Realiza la predicción del modelo y muestra el resultado con el camino de decisión'''
     def generar_prediccion(self):
         datos = self.obtener_datos_formulario()
         if datos is None:
@@ -221,6 +229,7 @@ Nodos terminales: {caracteristicas['nodos_terminales']}"""
         except Exception as e:
             messagebox.showerror("Error", f"Error al generar predicción: {str(e)}")
     
+    '''Limpia los resultados de predicción y restaura los valores por defecto'''
     def limpiar_prediccion(self):
         # Limpiar resultado
         self.resultado_label.config(text="Predicción: No realizada", foreground="black")
@@ -239,6 +248,7 @@ Nodos terminales: {caracteristicas['nodos_terminales']}"""
         for campo, var in self.campos.items():
             var.set(str(valores_defecto[campo]))
     
+    '''Abre un diálogo para guardar la imagen visual del árbol de decisión'''
     def guardar_imagen_arbol(self):
         # Abrir diálogo para seleccionar donde guardar
         archivo = filedialog.asksaveasfilename(
